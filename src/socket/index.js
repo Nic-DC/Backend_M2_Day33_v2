@@ -21,10 +21,10 @@ export const newConnectionHandler = (client) => {
   });
 
   // 3. Listen to "sendMessage" event, this is received when an user sends a new message
-  client.on("sendMessage", (message) => {
-    console.log("NEW MESSAGE:", message);
+  client.on("submitMessage", (message) => {
+    console.log("NEW SUBMITTED MESSAGE:", message);
     // 3.1 Whenever we receive that new message we have to propagate that message to everybody but not sender
-    client.broadcast.emit("newMessage", message);
+    client.broadcast.emit("submittedMessage", message);
   });
 
   // 4. Listen to an event called "disconnect", this is NOT a custom event!! This event happens when an user closes browser/tab
