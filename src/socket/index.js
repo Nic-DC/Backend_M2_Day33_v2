@@ -32,6 +32,6 @@ export const newConnectionHandler = (client) => {
     // 4.1 Server shall update the list of users by removing the one that has disconnected
     users = users.filter((user) => user.socketId !== client.id);
     // 4.2 Let's communicate the updated list all the remaining clients
-    client.broadcast.emit("updateusersList", users);
+    client.broadcast.emit("updateUsersList", users);
   });
 };
