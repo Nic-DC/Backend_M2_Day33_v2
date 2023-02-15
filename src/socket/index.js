@@ -1,3 +1,6 @@
+import MessagesModel from "../api/messages/model.js";
+import uniqid from "uniqid";
+
 let users = [];
 
 export const newConnectionHandler = (client) => {
@@ -8,7 +11,7 @@ export const newConnectionHandler = (client) => {
 
   // 2. Listen to an event emitted by the FE called "submitUserName", this event is going to contain the username in the payload
   client.on("submitUserName", (payload) => {
-    console.log(payload);
+    console.log("the payload is: ", payload);
     // 2.1 Whenever we receive the username, we keep track of that together with the socket.id
     users.push({ username: payload.username, socketId: client.id });
 
@@ -21,10 +24,15 @@ export const newConnectionHandler = (client) => {
   });
 
   // 3. Listen to "sendMessage" event, this is received when an user sends a new message
-  client.on("submitMessage", (message) => {
+  client.on("submitMessage", async (message) => {
     console.log("NEW SUBMITTED MESSAGE:", message);
+
+    const newMessage = new MessagesModel(message.message);
+    console.log("newMessage: ", newMessage);
+    await newMessage.save();
+
     // 3.1 Whenever we receive that new message we have to propagate that message to everybody but not sender
-    client.broadcast.emit("submittedMessage", message);
+    client.broadcast.emit("submittedMessage", { message: newMessage });
   });
 
   // 4. Listen to an event called "disconnect", this is NOT a custom event!! This event happens when an user closes browser/tab
